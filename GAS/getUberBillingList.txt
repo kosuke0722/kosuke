@@ -1,0 +1,44 @@
+function getUberBill() { 
+  /* ヘッダー */
+  SpreadsheetApp.getActiveSheet().getRange(1, 1).setValue("メール受信日付");
+  SpreadsheetApp.getActiveSheet().getRange(1, 2).setValue("送信元");
+  SpreadsheetApp.getActiveSheet().getRange(1, 3).setValue("件名");
+  SpreadsheetApp.getActiveSheet().getRange(1, 4).setValue("Uber利用日");
+  SpreadsheetApp.getActiveSheet().getRange(1, 5).setValue("Uber利用金額");
+  
+  /* Gmailから特定条件のスレッドを検索しメールを取り出す */ 
+  var strTerms = '("Uberご乗車")'; 
+  var myThreads = GmailApp.search(strTerms, 0, 30); //条件にマッチしたスレッドを取得 
+  var myMsgs = GmailApp.getMessagesForThreads(myThreads); //スレッドからメールを取得する
+  var valMsgs = []; 
+  var outcount = 0;
+  /* 各メールから日時、送信元、件名、内容を取り出す スレッド内の全メールも取得するため二次元配列から全取得 */ 
+  for(var i = 0;i < myMsgs.length;i++){
+    Logger.log(myMsgs[i].length);
+    for(var j = 0; j < myMsgs[i].length; j++){
+      valMsgs[outcount] = []; 
+      valMsgs[outcount][0] = myMsgs[i][j].getDate(); 
+      valMsgs[outcount][1] = myMsgs[i][j].getFrom(); 
+      valMsgs[outcount][2] = myMsgs[i][j].getSubject(); 
+      var valContents = myMsgs[i][j].getPlainBody(); 
+      /* 本文から利用日時を取得する */ 
+      valMsgs[outcount][3] = valContents.split("Uber をご利用いただきありがとうございます")[1].split("|")[0]; 
+      /* 本文から利用金額を取得する 本文フォーマット2種類対応 */ 
+      if(valContents.split("支払い")[1]) {
+        valMsgs[outcount][4] = valContents.split("支払い")[1].split("Personal")[0].replace("\r\n", "").replace("\n", "");
+      } else if (valContents.split("ご請求")[1]) {
+        //valMsgs[outcount][4] = valContents;
+        valMsgs[outcount][4] = valContents.split("ご請求")[1].split("Personal")[0].replace("\r\n", "").replace("\n", "");
+      }
+      outcount++;
+      SpreadsheetApp.getActiveSheet().getRange(1, 6).setValue(outcount); 
+    }
+  } 
+  
+  /* スプレッドシートに出力 */ 
+  if(outcount>0){ 
+     
+    SpreadsheetApp.getActiveSheet().getRange(2, 1, outcount, 5).setValues(valMsgs); //シートに貼り付け 
+     
+  } 
+}
