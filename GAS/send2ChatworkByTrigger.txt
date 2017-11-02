@@ -1,0 +1,40 @@
+/*
+リソース>ライブラリでchatworkを追加
+トリガーは任意
+*/
+var excuses =
+[
+"風邪をひいたので病院行ってきます！",
+"バイク渋滞に巻き込まれています",
+"気分がのらないので遅れます",
+];
+// トリガー設定
+function everyMonday() {
+    var onChangeTrigger = ScriptApp.newTrigger("chikoku")
+      .timeBased()
+      .atHour(7) // 7時～8時の間
+      .everyWeeks(1) // 週1回送信
+      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+      .create();
+}
+// トリガー設定
+function everyminutes() {
+    var onChangeTrigger = ScriptApp.newTrigger("chikoku")
+      .timeBased()
+      .everyMinutes(1) // 毎分送信
+      .create();
+}
+
+function chikoku() {
+  sendGaDataToChatWork();
+}
+
+function sendGaDataToChatWork() {
+  var cw_token = 'xxxxxxxx'; // チャットワークAPIのAPIトークン
+  var room_id = 00000000; // 送信先のチャットのid
+  
+  var rand = Math.ceil(Math.random() * excuses.length - 1);
+  var client = ChatWorkClient.factory({token: cw_token});
+  client.sendMessage({room_id: room_id, body: excuses[rand]});
+  //client.sendMessage({room_id: room_id, body: excuses[rand] + '10時頃出社します。'});
+}
