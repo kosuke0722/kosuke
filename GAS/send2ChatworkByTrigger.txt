@@ -1,27 +1,27 @@
 /*
-ƒŠƒ\[ƒX>ƒ‰ƒCƒuƒ‰ƒŠ‚Åchatwork‚ğ’Ç‰Á
-ƒgƒŠƒK[‚Í”CˆÓ
+ãƒªã‚½ãƒ¼ã‚¹>ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã§chatworkã‚’è¿½åŠ 
+ãƒˆãƒªã‚¬ãƒ¼ã¯ä»»æ„
 */
 var excuses =
 [
-"•—×‚ğ‚Ğ‚¢‚½‚Ì‚Å•a‰@s‚Á‚Ä‚«‚Ü‚·I",
-"ƒoƒCƒNa‘Ø‚ÉŠª‚«‚Ü‚ê‚Ä‚¢‚Ü‚·",
-"‹C•ª‚ª‚Ì‚ç‚È‚¢‚Ì‚Å’x‚ê‚Ü‚·",
+"é¢¨é‚ªã‚’ã²ã„ãŸã®ã§ç—…é™¢è¡Œã£ã¦ãã¾ã™ï¼",
+"ãƒã‚¤ã‚¯æ¸‹æ»ã«å·»ãè¾¼ã¾ã‚Œã¦ã„ã¾ã™",
+"æ°—åˆ†ãŒã®ã‚‰ãªã„ã®ã§é…ã‚Œã¾ã™",
 ];
-// ƒgƒŠƒK[İ’è
+// ãƒˆãƒªã‚¬ãƒ¼è¨­å®š
 function everyMonday() {
     var onChangeTrigger = ScriptApp.newTrigger("chikoku")
       .timeBased()
-      .atHour(7) // 7`8‚ÌŠÔ
-      .everyWeeks(1) // T1‰ñ‘—M
+      .atHour(7) // 7æ™‚ï½8æ™‚ã®é–“
+      .everyWeeks(1) // é€±1å›é€ä¿¡
       .onWeekDay(ScriptApp.WeekDay.MONDAY)
       .create();
 }
-// ƒgƒŠƒK[İ’è
+// ãƒˆãƒªã‚¬ãƒ¼è¨­å®š
 function everyminutes() {
     var onChangeTrigger = ScriptApp.newTrigger("chikoku")
       .timeBased()
-      .everyMinutes(1) // –ˆ•ª‘—M
+      .everyMinutes(1) // æ¯åˆ†é€ä¿¡
       .create();
 }
 
@@ -30,11 +30,11 @@ function chikoku() {
 }
 
 function sendGaDataToChatWork() {
-  var cw_token = 'xxxxxxxx'; // ƒ`ƒƒƒbƒgƒ[ƒNAPI‚ÌAPIƒg[ƒNƒ“
-  var room_id = 00000000; // ‘—Mæ‚Ìƒ`ƒƒƒbƒg‚Ìid
+  var cw_token = 'xxxxxxxx'; // ãƒãƒ£ãƒƒãƒˆãƒ¯ãƒ¼ã‚¯APIã®APIãƒˆãƒ¼ã‚¯ãƒ³
+  var room_id = 00000000; // é€ä¿¡å…ˆã®ãƒãƒ£ãƒƒãƒˆã®id
   
   var rand = Math.ceil(Math.random() * excuses.length - 1);
   var client = ChatWorkClient.factory({token: cw_token});
   client.sendMessage({room_id: room_id, body: excuses[rand]});
-  //client.sendMessage({room_id: room_id, body: excuses[rand] + '10 oĞ‚µ‚Ü‚·B'});
+  //client.sendMessage({room_id: room_id, body: excuses[rand] + '10æ™‚é ƒå‡ºç¤¾ã—ã¾ã™ã€‚'});
 }
