@@ -1,0 +1,41 @@
+function getGrabBillList() { 
+  
+  /* Gmailから特定条件のスレッドを検索しメールを取り出す */ 
+  var strTerms = '("GRAB E-Receipt")'; 
+  var myThreads = GmailApp.search(strTerms, 0, 30); //条件にマッチしたスレッドを取得 
+  var myMsgs = GmailApp.getMessagesForThreads(myThreads); //スレッドからメールを取得する →二次元配列で格納 
+  var valMsgs = []; 
+  var outcount = 0;
+  
+  /* 各メールから日時、送信元、件名、内容を取り出す*/ 
+  for(var i = 0;i < myMsgs.length;i++){
+    //Browser.msgBox(myMsgs[i].length);
+    for(var j = 0; j < myMsgs[i].length; j++){
+      valMsgs[outcount] = []; 
+      valMsgs[outcount][0] = myMsgs[i][j].getDate(); 
+      valMsgs[outcount][1] = myMsgs[i][j].getFrom(); 
+      valMsgs[outcount][2] = myMsgs[i][j].getSubject(); 
+      var valContents = myMsgs[i][j].getPlainBody(); 
+      // 本文から利用日時を取得する
+      valMsgs[outcount][3] = valContents.split("TIME")[1].split(" +")[0].replace("\r\n", "").replace("\n", ""); 
+      //本文から利用金額を取得する
+      /*if(valContents.split("TOTAL")[1]) {*/
+      valMsgs[outcount][4] = valContents.split("TOTAL")[1].split("DATE")[0].replace(" ", "").replace("\r\n", "").replace("\n", "");
+      /*
+      } else if (valContents.split("ご請求")[1]) {
+        //valMsgs[outcount][4] = valContents;
+        valMsgs[outcount][4] = valContents.split("ご請求")[1].split("Personal")[0].replace("\r\n", "").replace("\n", "");
+      }
+      */
+      outcount++;
+      SpreadsheetApp.getActiveSheet().getRange(1, 6).setValue(outcount); 
+    }
+  } 
+  
+  /* スプレッドシートに出力 */ 
+  if(outcount>0){ 
+     
+    SpreadsheetApp.getActiveSheet().getRange(2, 1, outcount, 5).setValues(valMsgs); //シートに貼り付け 
+     
+  } 
+}
