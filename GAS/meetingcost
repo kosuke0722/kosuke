@@ -23,7 +23,7 @@ function startmeeting() {
     // 経過時間表示
     sheet.getRange(1, 3).setValue(elapsed + '分経過');
     // コスト取得
-    cost = sheet.getRange(2, 3).getValue()/time_unit + cost;
+    cost = sheet.getRange(2, 3).getValue()/60*time_unit/60 + cost;
     // トータルコスト表示(時給を分へ換算)
     sheet.getRange(1, 4).setValue(Math.ceil(cost) + '円'); 
     Utilities.sleep(1000 * time_unit);
