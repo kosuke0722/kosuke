@@ -1,0 +1,41 @@
+function showStatus(){
+  var mySheet = SpreadsheetApp.getActiveSheet(); //シートを取得
+  var myCell = mySheet.getActiveCell(); //アクティブなセルの取得
+  var ss = SpreadsheetApp.getActiveSpreadsheet(); //スプシを取得
+  var ss_url = ss.getUrl(); //スプシのURLを取得
+  if(myCell.getColumn()==7){ //数字の部分には列番号（この場合D列）
+    var sentence = 
+      myCell.offset(0, -5).getValue() + " "
+      + myCell.offset(0, -4).getValue() + " "
+      + myCell.offset(0, -3).getValue() + " "
+      + myCell.offset(0, -2).getValue() + "\r\n"
+      + myCell.offset(0, -1).getValue() + "\r\n"
+      + myCell.getValue() + "\r\n" + ss_url;
+    slackPost("Question",":question:");
+  } else if(myCell.getColumn()==8) {
+    var sentence = 
+      myCell.offset(0, -6).getValue() + " "
+      + myCell.offset(0, -5).getValue() + " "
+      + myCell.offset(0, -4).getValue() + " "
+      + myCell.offset(0, -3).getValue() + "\r\n"
+      + myCell.offset(0, -2).getValue() + "\r\n"
+      + myCell.getValue() + "\r\n" + ss_url;
+    slackPost("Answer",":exclamation:");
+  }
+  
+  function slackPost(name, icon){   
+    var payload  = {
+      'text'      : sentence,
+      'username'  : name,  //botの名前
+      'channel'   : '#general'                ,  //投稿するチャンネル
+      'icon_emoji': icon            ,  //botのアイコン 
+    };
+    var options = {
+      'method'      : 'post'                 ,
+      'contentType' : 'application/json'     ,
+      'payload'     : JSON.stringify(payload),
+    };
+    var url = '';
+    UrlFetchApp.fetch(url, options);
+  }
+}
